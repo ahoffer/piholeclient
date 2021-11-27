@@ -22,7 +22,6 @@ class TestPyhole(unittest.TestCase):
         pass
 
     def test_get_domains(self):
-        self.pyhole.authenticate()
         x = self.pyhole.get_domains()
         pass
 

@@ -26,7 +26,7 @@ class YouTubeRule:
             new_rule = DomainItem({})
             new_rule.type = ListType.regex_blacklist
             new_rule.enabled = True
-            new_rule.comment = 'Added by Py-hole'
+            new_rule.comment = 'Added by Pyhole'
             new_rule.domain = '.*youtube.*'
             r = self.pyhole.add_domain(new_rule)
             print(r.text)
