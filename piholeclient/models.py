@@ -19,6 +19,7 @@ class ListType(Enum):
 class Pihole:
     def __init__(self, host, password):
         assert host, "Host is missing"
+        # Assumes authentication is enabled.
         assert password, "Password is missing"
         self.host = host
         self.password = password
@@ -29,29 +30,23 @@ class Pihole:
         self.url_groups = urljoin(self.url_base, 'admin/scripts/pi-hole/php/groups.php')
 
     def _post(self, url, params, **kwargs):
-        # if not self.token:
-        #     self.authenticate()
-        response = self._primitive_post(url, params, **kwargs)
+        # First time through the token is uninitialized.
+        response = self._post_with_token(url, params, **kwargs)
         # FYI: Pi-hole returns a 200 even if user is unauthenticated. :-(
         if 'expired' in response.text:
-            self.session = requests.session()
             self.authenticate()
-            return self._primitive_post(url, params, **kwargs)
+            return self._post_with_token(url, params, **kwargs)
         return response
 
-    def _primitive_post(self, url, params, **kwargs):
+    def _post_with_token(self, url, params, **kwargs):
         params['token'] = self.token
         return self.session.post(url, data=params, **kwargs)
 
     def authenticate(self):
         response = self.session.post(self.url_index,
                                      data={'pw': self.password},
-                                     allow_redirects=False,
-                                     # stream=True,
-                                     headers={'Content-Length':'0'}
-                                     )
+                                     allow_redirects=False)
         soup = BeautifulSoup(response.text, 'html.parser')
-        # TODO: Throw exception if token is not present in body. Could be bad password.
         object = soup.find(id='token')
         assert object, 'Token was not returned. Bad password?'
         self.token = object.text
