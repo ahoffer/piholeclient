@@ -18,6 +18,8 @@ class ListType(Enum):
 
 class Pihole:
     def __init__(self, host, password):
+        assert host, "Host is missing"
+        assert password, "Password is missing"
         self.host = host
         self.password = password
         self.session = requests.Session()
@@ -27,27 +29,32 @@ class Pihole:
         self.url_groups = urljoin(self.url_base, 'admin/scripts/pi-hole/php/groups.php')
 
     def _post(self, url, params, **kwargs):
-        if not self.token:
-            self.authenticate()
+        # if not self.token:
+        #     self.authenticate()
         response = self._primitive_post(url, params, **kwargs)
         # FYI: Pi-hole returns a 200 even if user is unauthenticated. :-(
         if 'expired' in response.text:
+            self.session = requests.session()
             self.authenticate()
             return self._primitive_post(url, params, **kwargs)
         return response
 
     def _primitive_post(self, url, params, **kwargs):
-        # This is where the security token is added.
         params['token'] = self.token
         return self.session.post(url, data=params, **kwargs)
 
     def authenticate(self):
         response = self.session.post(self.url_index,
-                                     {'pw': self.password},
-                                     allow_redirects=False)
+                                     data={'pw': self.password},
+                                     allow_redirects=False,
+                                     # stream=True,
+                                     headers={'Content-Length':'0'}
+                                     )
         soup = BeautifulSoup(response.text, 'html.parser')
         # TODO: Throw exception if token is not present in body. Could be bad password.
-        self.token = soup.find(id="token").text
+        object = soup.find(id='token')
+        assert object, 'Token was not returned. Bad password?'
+        self.token = object.text
 
     def get_domains(self):
         params = {"action": "get_domains", "type": ListType.whitelist}
