@@ -1,32 +1,32 @@
 import os
 import unittest
 
-from Pyhole import Pyhole
-from YouTubeRule import YouTubeRule
+from controllers import YouTubeRule
+from models import Pihole
 
 
 class TestPyhole(unittest.TestCase):
-    pyhole = Pyhole('192.168.0.2', os.getenv('PI_PASSWD'))
+    client = Pihole('192.168.0.2', os.getenv('PI_PASSWD'))
 
     def test_constructor(self):
-        self.assertIsNotNone(self.pyhole.host)
-        self.assertIsNotNone(self.pyhole.password)
-        self.assertIsNotNone(self.pyhole.session)
+        self.assertIsNotNone(self.client.host)
+        self.assertIsNotNone(self.client.password)
+        self.assertIsNotNone(self.client.session)
 
     def test_authentication(self):
-        self.pyhole.authenticate()
+        self.client.authenticate()
 
     def test_bad_token(self):
-        self.pyhole.token = 'expired'
-        x = self.pyhole.get_domains()
+        self.client.token = 'expired'
+        x = self.client.get_domains()
         pass
 
     def test_get_domains(self):
-        x = self.pyhole.get_domains()
+        x = self.client.get_domains()
         pass
 
     def test_youtube(self):
-        yt_rule = YouTubeRule(self.pyhole)
+        yt_rule = YouTubeRule(self.client)
         is_blocked = yt_rule.youtube_is_blocked()
         yt_rule.flip()
         new_status = yt_rule.youtube_is_blocked()
