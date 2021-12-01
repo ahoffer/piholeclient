@@ -29,3 +29,11 @@ class YouTubeRule:
             new_rule.domain = '.*youtube.*'
             r = self.pihole.add_domain(new_rule)
             print(r.text)
+
+    def block(self):
+        if not self.youtube_is_blocked():
+            flip()
+            
+    def unblock(self):
+        if self.youtube_is_blocked():
+            flip()
