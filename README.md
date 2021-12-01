@@ -10,7 +10,7 @@ Simple Python HTTP interface to pi-hole
 
 ### Install From File
 
-    pip3 install dist/piholeclient-0.0.1-py3-none-any.whl
+    pip3 install dist/piholeclient-X-py3-none-any.whl
 
 #### Upload to PyPi Test
 
@@ -27,6 +27,14 @@ Simple Python HTTP interface to pi-hole
 ### Import
 
     from piholeclient.models import Pihole
+
+### Use
+Look at the `test.py` file in the GitHub repository for a few examples.
+
+Create an instance of the `Pihole` class and use it:
+
+    client = Pihole('192.168.0.2', 'mypassword')
+    result = client.get_domains()
 
 ## Pi-hole's api.php
 
