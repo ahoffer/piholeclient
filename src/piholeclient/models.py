@@ -47,9 +47,9 @@ class Pihole:
                                      data={'pw': self.password},
                                      allow_redirects=False)
         soup = BeautifulSoup(response.text, 'html.parser')
-        object = soup.find(id='token')
-        assert object, 'Token was not returned. Bad password?'
-        self.token = object.text
+        element = soup.find(id='token')
+        assert element, 'Token was not returned. Bad password?'
+        self.token = element.text
 
     def get_domains(self):
         params = {"action": "get_domains", "type": ListType.whitelist}
@@ -91,6 +91,7 @@ class DomainItem:
     def __init__(self, pihole_dict):
         self.__dict__.update(pihole_dict)
 
+    # Change "enabled" from an int to a bool
     @property
     def enabled(self):
         return self.__dict__['enabled'] != 0
@@ -99,6 +100,7 @@ class DomainItem:
     def enabled(self, b):
         self.__dict__['enabled'] = int(b)
 
+    # Change "type" from an int to an enum
     @property
     def type(self):
         return ListType(self.__dict__['type'])

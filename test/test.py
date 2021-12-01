@@ -1,11 +1,11 @@
 import os
 import unittest
 
-from controllers import YouTubeRule
-from models import Pihole
+from .. src.piholeclient.controllers import YouTubeRule
+from .. src.piholeclient.models import Pihole
 
 
-class TestPyhole(unittest.TestCase):
+class PiholeClientTest(unittest.TestCase):
     client = Pihole('192.168.0.2', os.getenv('PI_PASSWD'))
 
     def test_constructor(self):
