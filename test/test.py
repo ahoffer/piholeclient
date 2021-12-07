@@ -1,15 +1,14 @@
 import os
 import unittest
 
-from .. src.piholeclient.controllers import YouTubeRule
-from .. src.piholeclient.models import Pihole
+from piholeclient.controllers import YouTubeRule
+from piholeclient.models import Pihole
 
 
 class PiholeClientTest(unittest.TestCase):
-    client = Pihole('192.168.0.2', os.getenv('PI_PASSWD'))
+    client = Pihole('localhost', os.getenv('PI_PASSWD'), port=8000)
 
     def test_constructor(self):
-        self.assertIsNotNone(self.client.host)
         self.assertIsNotNone(self.client.password)
         self.assertIsNotNone(self.client.session)
 

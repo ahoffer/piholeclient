@@ -1,4 +1,4 @@
-from models import ListType, DomainItem
+from piholeclient.models import DomainItem, ListType
 
 
 class YouTubeRule:

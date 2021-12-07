@@ -17,15 +17,16 @@ class ListType(Enum):
 
 
 class Pihole:
-    def __init__(self, host, password):
+    def __init__(self, host, password, port=80):
         assert host, "Host is missing"
         # Assumes authentication is enabled.
         assert password, "Password is missing"
-        self.host = host
         self.password = password
+        self.port = port
+        netloc = f'{host}:{port}'
         self.session = requests.Session()
         self.token = None
-        self.url_base = urlunsplit(('http', self.host, '', '', ''))
+        self.url_base = urlunsplit(('http', netloc, '', '', ''))
         self.url_index = urljoin(self.url_base, 'admin/index.php')
         self.url_groups = urljoin(self.url_base, 'admin/scripts/pi-hole/php/groups.php')
 
@@ -48,7 +49,8 @@ class Pihole:
                                      allow_redirects=False)
         soup = BeautifulSoup(response.text, 'html.parser')
         element = soup.find(id='token')
-        assert element, 'Token was not returned. Bad password?'
+        assert element, 'Token was not returned. Bad password? Or password was never set? Do not use the password ' \
+                        'hash. Use the real password, not the password hash'
         self.token = element.text
 
     def get_domains(self):
