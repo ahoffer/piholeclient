@@ -31,7 +31,7 @@ class YouTubeRule:
     def block(self):
         if not self.youtube_is_blocked():
             self.flip()
-            
+
     def unblock(self):
         if self.youtube_is_blocked():
             self.flip()

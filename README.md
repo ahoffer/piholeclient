@@ -19,7 +19,6 @@ Simple Python HTTP interface to pi-hole
     Username: __token__
     Password: API token
 
-
 #### Install from PyPi Test
 
     python3 -m pip install --index-url https://test.pypi.org/simple/ --no-deps piholeclient-ahoffer
@@ -29,6 +28,7 @@ Simple Python HTTP interface to pi-hole
     from piholeclient.models import Pihole
 
 ### Use
+
 Look at the `test.py` file in the GitHub repository for a few examples.
 
 Create an instance of the `Pihole` class and use it:
